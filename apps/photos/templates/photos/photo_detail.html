@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load i18n thumbnail comments %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="{{ STATIC_URL }}fancybox/jquery.fancybox.pack.js"></script>
+
+    <script>
+        $(function() {
+        	$(".fancybox").fancybox();
+        });
+    </script>
+{% endblock %}
+
+{% block infocolumn %}{% endblock %}
+
+{% block content %}
+    {% thumbnail photo.photo "800" upscale=False as im %}
+        <a class="fancybox" href="{{ photo.photo.url }}"><img src="{{ im.url }}"/></a>
+    {% endthumbnail %}
+    <br/>
+    {% if photo.user == request.user %}
+        <a href="{% url photos-photo-delete photo.album.pk photo.pk %}" class="btn btn-alert"><i class="icon-trash"></i> {% trans "Delete" %}</a>
+    {% endif %}
+    {% render_comment_list for photo %}
+    {% with photo.get_absolute_url as next %}
+    {% render_comment_form for photo %}
+    {% endwith %}
+
+{% endblock %}

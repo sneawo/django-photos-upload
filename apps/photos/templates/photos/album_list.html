@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block infocolumn %}{% endblock %}
+
+{% block content %}
+    <div class="span6">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Альбом</th>
+            <th>Дата</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for album in album_list %}
+            <tr>
+                <td>
+                    <a href="{{ album.get_absolute_url }}">{{ album }}</a>
+                </td>
+                <td>{{ album.created }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+{% endblock %}

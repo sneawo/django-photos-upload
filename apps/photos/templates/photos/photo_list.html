@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load i18n thumbnail comments %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/photo.css" type="text/css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="{{ STATIC_URL }}fancybox/jquery.fancybox.pack.js"></script>
+
+    <script>
+        $(function() {
+        	$(".fancybox").fancybox();
+        });
+    </script>
+{% endblock %}
+
+{% block infocolumn %}{% endblock %}
+
+{% block content %}
+    <h2>{{ album }}</h2>
+    {% if album.is_public or album.user == request.user %}
+        <a href="{% url photos-photo-add album.pk %}" class="btn btn-primary">{% trans "Upload photos" %}</a>
+        <br/><br/>
+    {% endif %}
+
+    {% for photo in photo_list %}
+        {% get_comment_count for photo as comment_count %}
+        <div class="photo">
+        {% thumbnail photo.photo "150" as im %}
+            <a class="fancybox" rel="album" href="{{ photo.photo.url }}"><img src="{{ im.url }}"/></a>
+        {% endthumbnail %}<br/>
+        <a href="{{ photo.get_absolute_url }}">{% trans "Comments" %} – {{ comment_count }}</a>
+        {% if photo.user == request.user %}
+            <a href="{% url photos-photo-delete photo.album.pk photo.pk %}" class="pull-right"><i class="icon-trash"></i></a>
+        {% endif %}
+        </div>
+    {% endfor %}
+
+    {% include "pagination/pure_pagination.html" %}
+{% endblock %}
